@@ -1,22 +1,59 @@
 var isRedTurn = true;
 var gameOver = false;
-
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+  
 function handleClick(element) {
     if(!gameOver) {
         if(!element.children[0].innerText) {
     
     
         if(isRedTurn) {
-            element.children[0].innerText = "Red";
             document.getElementById("turn").innerText = "Yellow";
         }
         else {
-            element.children[0].innerText = "Yellow"
             document.getElementById("turn").innerText = "Red";
         }
+        let columnNumber = Number(element.id.split("-")[1]) % 5;
+        dropInColumn(columnNumber);
+
         checkVictory();
         isRedTurn = !isRedTurn;
         }
+        }
+    }
+
+    function dropInColumn(columnNumber) {
+        if (columnNumber === 0) {
+            columnNumber = 5;
+        }
+        let circleConstant = "circle-";
+        let currentColumnId = circleConstant + columnNumber;
+        let el = document.getElementById(currentColumnId);
+
+        while(el.style.backgroundColor != "red" && el.style.backgroundColor != "yellow" && columnNumber <= 25) {
+
+            if (isRedTurn) {
+                el.style.backgroundColor = "red";
+            } else {
+                el.style.backgroundColor = "yellow";
+            }
+
+            if (columnNumber > 5) {
+                document.getElementById("circle-" + (columnNumber - 5)).style.backgroundColor = "rgb(141, 141, 161)";
+            }
+
+            columnNumber += 5;
+            if (columnNumber > 25) {
+                break;
+            }
+            el = document.getElementById(circleConstant + columnNumber);
+
         }
     }
 
@@ -28,9 +65,9 @@ function handleClick(element) {
          checkColumn2() ||
           checkColumn3() ||
           checkColumn4() ||
-          checkColumn5()||
-         checkDiagonal1() || 
-         checkDiagonal2();
+          checkColumn5() //||
+        //  checkDiagonal1() || 
+        //  checkDiagonal2();
     if(winner) {
         let topText = document.getElementById("top-text");
         topText.innerText  = "Victory! The Winner Is: " + winner;
